@@ -1,15 +1,50 @@
 from iot import Ui_Dialog
 from PyQt5 import QtCore, QtGui, QtWidgets
+from PyQt5.QtCore import QThreadPool
 import numpy as np
 import pyqtgraph as pg
+from bt_scanner import BtScanWorker
 
 class Controller:
 
     def __init__(self, parent):
         self.ui = Ui_Dialog()
         self.parent = parent
+        self.bt_devices = []
 
         self.plot_vars = ["temperatura", "humedad","Acc_x","Acc_y","Acc_z","RMS"]
+
+        #buscar señales
+        self.thread_pool = QThreadPool()
+        self.ui.search_esp32.clicked.connect(self.on_bt_search_start)
+
+    def on_bt_search_start(self):
+        worker = BtScanWorker()
+        worker.signals.search_done.connect(self.on_bt_search_done)
+        self.ui.search_esp32.setText("Buscando ...")
+        self.ui.search_esp32.setEnabled(False)
+
+        #Iniciar busqueda
+        self.thread_pool.start(worker)
+
+    def on_bt_search_done(self,devices):
+        self.ui.search_esp32.setText("Buscar ESP-32")
+        self.ui.search_esp32.setEnabled(True)
+        self.bt_devices = devices
+        self.update_device_select()
+
+    def update_device_select(self):
+        self.ui.selec_esp.clear()
+
+        #for device_id in self.db_devices:
+        #    item = (f"ESP32: ID: {device_id}",device_id)
+        #    self.ui.selec_esp.addItem(*item)
+
+        #self.ui.selec_esp.insertSeparator(self.ui.selec_esp.count())
+
+        for device in self.bt_devices:
+            self.ui.selec_esp.addItem(f"Bluetooth: {device.name}", device)
+
 
     def setSignals(self):
         self.ui.selec_10.currentIndexChanged.connect(self.leerModoOperacion)

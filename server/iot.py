@@ -25,11 +25,11 @@ class Ui_Dialog(object):
         self.selec_esp.setGeometry(QtCore.QRect(300, 50, 81, 31))
         self.selec_esp.setStyleSheet("background-color: rgb(255, 255, 255);")
         self.selec_esp.setObjectName("selec_esp")
-        self.boton_configuracion_3 = QtWidgets.QPushButton(self.tab)
-        self.boton_configuracion_3.setGeometry(QtCore.QRect(400, 50, 121, 31))
-        self.boton_configuracion_3.setStyleSheet("background-color: rgb(5, 5, 203);\n"
+        self.search_esp32 = QtWidgets.QPushButton(self.tab)
+        self.search_esp32.setGeometry(QtCore.QRect(400, 50, 121, 31))
+        self.search_esp32.setStyleSheet("background-color: rgb(5, 5, 203);\n"
 "color: rgb(255, 255, 255);")
-        self.boton_configuracion_3.setObjectName("boton_configuracion_3")
+        self.search_esp32.setObjectName("search_esp32")
         self.boton_configuracion = QtWidgets.QPushButton(self.tab)
         self.boton_configuracion.setGeometry(QtCore.QRect(350, 440, 93, 28))
         self.boton_configuracion.setStyleSheet("background-color: rgb(5, 5, 203);\n"
@@ -241,13 +241,13 @@ class Ui_Dialog(object):
         self.Pestana_principal.addTab(self.tab_2, "")
 
         self.retranslateUi(Dialog)
-        self.Pestana_principal.setCurrentIndex(1)
+        self.Pestana_principal.setCurrentIndex(0)
         QtCore.QMetaObject.connectSlotsByName(Dialog)
 
     def retranslateUi(self, Dialog):
         _translate = QtCore.QCoreApplication.translate
         Dialog.setWindowTitle(_translate("Dialog", "Dialog"))
-        self.boton_configuracion_3.setText(_translate("Dialog", "Seleccion ESP-32"))
+        self.search_esp32.setText(_translate("Dialog", "Buscar ESP-32"))
         self.boton_configuracion.setText(_translate("Dialog", "Configurar"))
         self.label_7.setText(_translate("Dialog", "Acc Sampling"))
         self.label_1.setText(_translate("Dialog", "Esp32 disponibles por bluetooth"))
