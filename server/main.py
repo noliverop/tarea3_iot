@@ -4,12 +4,16 @@ from PyQt5.QtCore import QThreadPool
 import numpy as np
 import pyqtgraph as pg
 from bt_scanner import BtScanWorker
+from bleak import BLEDevice
+import bt
 
-class Controller:
+class Controller(QtWidgets.QDialog):
 
-    def __init__(self, parent):
+    def __init__(self):
+        super(Controller,self).__init__()
         self.ui = Ui_Dialog()
-        self.parent = parent
+        self.ui.setupUi(self)
+        
         self.bt_devices = []
 
         self.plot_vars = ["temperatura", "humedad","Acc_x","Acc_y","Acc_z","RMS"]
@@ -17,6 +21,9 @@ class Controller:
         #buscar señales
         self.thread_pool = QThreadPool()
         self.ui.search_esp32.clicked.connect(self.on_bt_search_start)
+
+        #seleccion de dispositivo
+        self.ui.selec_esp.currentIndexChanged.connect(self.on_device_select)
 
     def on_bt_search_start(self):
         worker = BtScanWorker()
@@ -46,6 +53,22 @@ class Controller:
             self.ui.selec_esp.addItem(f"Bluetooth: {device.name}", device)
 
 
+    def on_device_select(self):
+
+        print("se cambio dispositivo")
+        device = self.ui.selec_esp.currentData()
+        print(device)
+        print(device.address)
+        print(device.name)
+        if device.name is None:
+            print("no es dispositivo")
+
+        elif device.name is not None and type(device) == BLEDevice and device.name == "ESP_GATTS_DEMO":
+            print("es dispositivo y es BLE")
+            config = bt.bt_read_caracts(device.address)
+            print(config)
+
+        
     def setSignals(self):
         self.ui.selec_10.currentIndexChanged.connect(self.leerModoOperacion)
         self.ui.boton_detener.clicked.connect(self.criticalError)
@@ -143,11 +166,8 @@ class Controller:
 if __name__ == "__main__":
     import sys
     app = QtWidgets.QApplication(sys.argv)
-    Dialog = QtWidgets.QDialog()
-    cont = Controller(parent=Dialog)
-    ui = cont.ui
-    ui.setupUi(Dialog)
+    Dialog = Controller()
     Dialog.show()
-    cont.setSignals()
+    
     sys.exit(app.exec_())
 
