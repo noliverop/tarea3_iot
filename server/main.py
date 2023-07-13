@@ -57,6 +57,10 @@ class Controller(QtWidgets.QDialog):
         #buscar señales
         self.thread_pool = QThreadPool()
         self.ui.search_esp32.clicked.connect(self.on_bt_search_start)
+        self.ui.boton_detener.clicked.connect(self.on_device_stop)
+
+        self.ui.boton_graficar.clicked.connect(self.graficar)
+        self.ui.detener.clicked.connect(self.detener_graficos)
 
         #seleccion de dispositivo
         self.ui.selec_esp.currentIndexChanged.connect(self.on_device_select)
@@ -139,6 +143,17 @@ class Controller(QtWidgets.QDialog):
         global device 
         device = None
         self.ui.search_esp32.setEnabled(True) 
+        self.ui.search_esp32.setText("Buscar ESP-32")
+        self.ui.text_acc_sampling.setText("")
+        self.ui.text_acc_sensibity.setText("")
+        self.ui.text_gyro_sensibility.setText("")
+        self.ui.textEdit_18.setText("")
+        self.ui.text_disc_time.setText("")
+        self.ui.text_tcp_port.setText("")
+        self.ui.text_udp_port.setText("")
+        self.ui.text_host_ip.setText("")
+        self.ui.text_ssid.setText("")
+        self.ui.text_pass.setText("")
     
     def setSignals(self):
         self.ui.selec_10.currentIndexChanged.connect(self.leerModoOperacion)
@@ -171,7 +186,7 @@ class Controller(QtWidgets.QDialog):
         p.setAxisItems({"bottom":pg.DateAxisItem()})
         var_select1 = self.plot_vars[self.ui.selec_plot1.currentIndex()]
         y1 = np.random.randint(30,size=10)
-        x1 = [1,2,3,4,5,6,7,8,9,10]
+        x1 = [50,100,150,200,250,300,350,400,450,500]
 
         #data = np.array([x,y1])
 
@@ -185,7 +200,7 @@ class Controller(QtWidgets.QDialog):
         
         var_select2 = self.plot_vars[self.ui.selec_plot2.currentIndex()]
         y2 = np.random.randint(30,size=10)
-        x2 = [1,2,3,4,5,6,7,8,9,10]
+        x2 = [50,100,150,200,250,300,350,400,450,500]
 
         p = plot2.addPlot()
         p.showGrid(x=True,y=True)
@@ -201,7 +216,7 @@ class Controller(QtWidgets.QDialog):
 
         var_select3 = self.plot_vars[self.ui.selec_plot3.currentIndex()]
         y3 = np.random.randint(30,size=10)
-        x3 = [1,2,3,4,5,6,7,8,9,10]
+        x3 = [50,100,150,200,250,300,350,400,450,500]
 
         p = plot3.addPlot()
         p.showGrid(x=True,y=True)
