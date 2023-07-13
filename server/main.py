@@ -73,7 +73,7 @@ class Controller(QtWidgets.QDialog):
         if disp.name is None:
             print("no es dispositivo")
 
-        elif device.name is not None and type(disp) == BLEDevice and disp.name == "ESP_GATTS_DEMO":
+        elif disp.name is not None and type(disp) == BLEDevice and disp.name == "ESP_GATTS_DEMO":
             print("es dispositivo y es BLE")
             if status == 10:
                 device = adapter.connect(MAC, timeout=2.0)
