@@ -1,6 +1,7 @@
 import pygatt
 import time
 import logging
+import BLEClient
 
 adapter = pygatt.GATTToolBackend()
 
@@ -18,6 +19,10 @@ uuids = {
     "ssid": "0000ff0b-0000-1000-8000-00805f9b34fb",
     "passwd": "0000ff0c-0000-1000-8000-00805f9b34fb",
 }
+
+CHARACTERISTIC_UUID_DATA = "0000ee01-0000-1000-8000-00805f9b34fb"
+
+
 
 
 def bt_read_caracts(mac):
@@ -37,10 +42,17 @@ def bt_read_caracts(mac):
             print("paso el start")
             device = adapter.connect(mac, timeout=2.0)
             print('Se conecto!')
-
-            for key in uuids.keys():
-                if key not in vals:
-                    vals[key] = device.char_read(uuids[key])
+            try:
+                ret = device.char_read(CHARACTERISTIC_UUID_DATA)
+            except Exception as ex:
+                print(ex.__class__.__name__)
+                print("Failed")
+            print("leyo la data")
+            config = ret
+            print(config)
+            #for key in uuids.keys():
+            #    if key not in vals:
+            #        vals[key] = device.char_read(uuids[key])
 
         except pygatt.exceptions.NotConnectedError:
             qty += 1
@@ -52,3 +64,4 @@ def bt_read_caracts(mac):
             adapter.stop()
 
     return vals
+
