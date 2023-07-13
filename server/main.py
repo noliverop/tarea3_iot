@@ -6,7 +6,7 @@ import pyqtgraph as pg
 from bt_scanner import BtScanWorker
 from bleak import BLEDevice
 import bt
-import DatabaseWork as db
+import DatabaseWorker as db
 import pygatt
 
 adapter = pygatt.GATTToolBackend()

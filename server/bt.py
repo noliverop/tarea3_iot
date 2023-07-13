@@ -1,7 +1,6 @@
 import pygatt
 import time
 import logging
-import BLEClient
 
 adapter = pygatt.GATTToolBackend()
 
