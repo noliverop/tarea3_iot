@@ -57,8 +57,8 @@ def lossSave(header, data, attempts):
 def getConfig():
     with sql.connect("DB.sqlite") as con:
         cur = con.cursor()
-        protocol, transport = cur.execute('''select ID_protocol, TransportLayer from Config''').fetchone()
-        return protocol, transport
+        id_device,status,id_protocol,acc_sam,acc_sens,gyro,bme688,dis,tcp,udp,host,ssid,passw = cur.execute('''select * from Config''').fetchone()
+        return id_device,status,id_protocol,acc_sam,acc_sens,gyro,bme688,dis,tcp,udp,host,ssid,passw
     
 def save_config(status, protocol):
     with sql.connect("DB.sqlite") as con:

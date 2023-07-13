@@ -45,10 +45,20 @@ create_logs = '''CREATE TABLE Logs (
 # Tabla con las configuraciones de conexion de cada dispositivo
 # Por mensaje!
 create_config = '''CREATE TABLE Config (
-    ID_DEVICE INTEGER NOT NULL,
-    ID_protocol INTEGER,
-    TransportLayer INTEGER NOT NULL
-);'''
+        DEVICE_ID INTEGER PRIMARY KEY,
+        STATUS INTEGER,
+        ID_PROTOCOL INTEGER,
+        ACC_SAMPLING INTEGER,
+        ACC_SENSIBILITY INTEGER,
+        GYRO_SENSIBILITY INTEGER,
+        BME688_SAMPLING INTEGER,
+        DISCONTINUOUS_TIME INTEGER,
+        TCP_PORT INTEGER,
+        UDP_PORT INTEGER,
+        HOST_ADDR VARCHAR,
+        SSID VARCHAR,
+        PASS VARCHAR
+    );'''
 
 # Tabla con los tiempos de comunicacion y la cantidad de intentos de conexion
 create_loss = '''CREATE TABLE Loss (
@@ -60,7 +70,21 @@ create_loss = '''CREATE TABLE Loss (
 
 # insertamos la configuracion default
 # Protocolo 0, configuracion status 10.
-insert_config = '''insert into Config (ID_DEVICE, ID_protocol, TransportLayer) values (12612, 0, 30)'''
+insert_config = '''insert into Config (
+        DEVICE_ID,
+        STATUS ,
+        ID_PROTOCOL ,
+        ACC_SAMPLING ,
+        ACC_SENSIBILITY ,
+        GYRO_SENSIBILITY ,
+        BME688_SAMPLING ,
+        DISCONTINUOUS_TIME ,
+        TCP_PORT ,
+        UDP_PORT ,
+        HOST_ADDR ,
+        SSID ,
+        PASS 
+    ) values (12612, 0, 30,1,2,3,4,5,6,7,'A','B','C')'''
     
 import sqlite3 as sql
 

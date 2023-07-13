@@ -79,12 +79,12 @@ class Controller(QtWidgets.QDialog):
             global adapter
             adapter.start()  
             device = adapter.connect(MAC, timeout=2.0)
-            protocol,status = db.getConfig()
-            print(f"protocol es {protocol} y status es {status}")
+            id_device,status,id_protocol,acc_sam,acc_sens,gyro,bme688,dis,tcp,udp,host,ssid,passw = db.getConfig()
+            print(f"protocol es {id_device} y status es {status}")
 
 
-            payload = bytes([status, protocol])
-            print(f"Writing config: status={status}, protocol={protocol}")
+            payload = bytes([status,id_protocol,acc_sam,acc_sens,gyro,bme688,dis,tcp,udp,host,ssid,passw])
+            print(f"Writing config: status={status}, protocol={id_protocol}")
             device.char_write(CHARACTERISTIC_UUID_CONFIG, payload, wait_for_response=False)
 
 
