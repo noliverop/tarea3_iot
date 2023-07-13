@@ -74,11 +74,13 @@ class Controller(QtWidgets.QDialog):
             print("no es dispositivo")
 
         elif disp.name is not None and type(disp) == BLEDevice and disp.name == "ESP_GATTS_DEMO":
-            print("es dispositivo y es BLE")
-            if status == 10:
-                device = adapter.connect(MAC, timeout=2.0)
-                protocol,status = db.getConfig()
-                print(f"protocol es {protocol} y status es {status}")
+            #global status
+            print("es dispositivo y es BLE")          
+            global adapter
+            adapter.start()  
+            device = adapter.connect(MAC, timeout=2.0)
+            protocol,status = db.getConfig()
+            print(f"protocol es {protocol} y status es {status}")
 
 
             payload = bytes([status, protocol])
