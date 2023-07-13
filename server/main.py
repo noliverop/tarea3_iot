@@ -5,7 +5,6 @@ import numpy as np
 import pyqtgraph as pg
 from bt_scanner import BtScanWorker
 from bleak import BLEDevice
-import bt
 import DatabaseWorker as db
 import pygatt
 
