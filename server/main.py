@@ -15,6 +15,7 @@ CHARACTERISTIC_UUID_DATA = "0000ee01-0000-1000-8000-00805f9b34fb"
 CHARACTERISTIC_UUID_CONFIG = "0000ff01-0000-1000-8000-00805f9b34fb" # ID de la caracteristica del servicio
 status = 10
 subscribed = False
+device = None
 
 
 
@@ -103,7 +104,10 @@ class Controller(QtWidgets.QDialog):
             print("es dispositivo y es BLE")          
             global adapter
             adapter.start()  
+            global device
             device = adapter.connect(MAC, timeout=2.0)
+            self.ui.search_esp32.setText("Conectado")
+            self.ui.search_esp32.setEnabled(False) 
             id_device,status,id_protocol,acc_sam,acc_sens,gyro,bme688,dis,tcp,udp,host,ssid,passw = db.getConfig()
             self.ui.text_acc_sampling.setText(str(acc_sam))
             self.ui.text_acc_sensibity.setText(str(acc_sens))
@@ -129,7 +133,13 @@ class Controller(QtWidgets.QDialog):
             #config = bt.bt_read_caracts(device.address)
             #print(config)
 
-        
+    def on_device_stop(self):
+        global adapter
+        adapter.stop()
+        global device 
+        device = None
+        self.ui.search_esp32.setEnabled(True) 
+    
     def setSignals(self):
         self.ui.selec_10.currentIndexChanged.connect(self.leerModoOperacion)
         self.ui.boton_detener.clicked.connect(self.criticalError)
