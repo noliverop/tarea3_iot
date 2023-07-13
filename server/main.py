@@ -16,6 +16,26 @@ CHARACTERISTIC_UUID_CONFIG = "0000ff01-0000-1000-8000-00805f9b34fb" # ID de la c
 status = 10
 subscribed = False
 
+import struct
+
+def create_byte_array(data_list):
+    byte_array = bytearray()
+
+    for item in data_list:
+        if isinstance(item, int):
+            # Pack the integer as a 4-byte signed integer (int32)
+            byte_array.extend(struct.pack('>i', item))
+        elif isinstance(item, str):
+            # Convert the string to bytes and append
+            byte_array.extend(item.encode('utf-8'))
+        elif isinstance(item, float):
+            # Pack the float as a 8-byte float (float64)
+            byte_array.extend(struct.pack('>d', item))
+        else:
+            raise ValueError(f"Unsupported type: {type(item)}")
+
+    return byte_array
+
 
 class Controller(QtWidgets.QDialog):
 
@@ -80,11 +100,10 @@ class Controller(QtWidgets.QDialog):
             adapter.start()  
             device = adapter.connect(MAC, timeout=2.0)
             id_device,status,id_protocol,acc_sam,acc_sens,gyro,bme688,dis,tcp,udp,host,ssid,passw = db.getConfig()
-            print(f"protocol es {id_device} y status es {status}")
 
 
-            payload = bytes([status,id_protocol,acc_sam,acc_sens,gyro,bme688,dis,tcp,udp,host,ssid,passw])
-            print(f"Writing config: status={status}, protocol={id_protocol}")
+            payload = create_byte_array([status,id_protocol,acc_sam,acc_sens,gyro,bme688,dis,tcp,udp,host,ssid,passw])
+            print(f"Writing config")
             device.char_write(CHARACTERISTIC_UUID_CONFIG, payload, wait_for_response=False)
 
 
