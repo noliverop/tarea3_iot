@@ -6,6 +6,16 @@ import pyqtgraph as pg
 from bt_scanner import BtScanWorker
 from bleak import BLEDevice
 import bt
+import DatabaseWork as db
+import pygatt
+
+adapter = pygatt.GATTToolBackend()
+
+CHARACTERISTIC_UUID_DATA = "0000ee01-0000-1000-8000-00805f9b34fb"
+CHARACTERISTIC_UUID_CONFIG = "0000ff01-0000-1000-8000-00805f9b34fb" # ID de la caracteristica del servicio
+status = 10
+subscribed = False
+
 
 class Controller(QtWidgets.QDialog):
 
@@ -56,17 +66,29 @@ class Controller(QtWidgets.QDialog):
     def on_device_select(self):
 
         print("se cambio dispositivo")
-        device = self.ui.selec_esp.currentData()
-        print(device)
-        print(device.address)
-        print(device.name)
-        if device.name is None:
+        disp = self.ui.selec_esp.currentData()
+
+        MAC = disp.address
+
+        if disp.name is None:
             print("no es dispositivo")
 
-        elif device.name is not None and type(device) == BLEDevice and device.name == "ESP_GATTS_DEMO":
+        elif device.name is not None and type(disp) == BLEDevice and disp.name == "ESP_GATTS_DEMO":
             print("es dispositivo y es BLE")
-            config = bt.bt_read_caracts(device.address)
-            print(config)
+            if status == 10:
+                device = adapter.connect(MAC, timeout=2.0)
+                protocol,status = db.getConfig()
+                print(f"protocol es {protocol} y status es {status}")
+
+
+            payload = bytes([status, protocol])
+            print(f"Writing config: status={status}, protocol={protocol}")
+            device.char_write(CHARACTERISTIC_UUID_CONFIG, payload, wait_for_response=False)
+
+
+
+            #config = bt.bt_read_caracts(device.address)
+            #print(config)
 
         
     def setSignals(self):
