@@ -16,6 +16,8 @@ CHARACTERISTIC_UUID_CONFIG = "0000ff01-0000-1000-8000-00805f9b34fb" # ID de la c
 status = 10
 subscribed = False
 
+
+
 import struct
 
 def create_byte_array(data_list):
@@ -43,6 +45,9 @@ class Controller(QtWidgets.QDialog):
         super(Controller,self).__init__()
         self.ui = Ui_Dialog()
         self.ui.setupUi(self)
+
+        self.status = [0, 20, 21, 22, 23, 30, 31]
+        self.protocol = [1, 2, 3, 4, 5]
         
         self.bt_devices = []
 
@@ -100,11 +105,24 @@ class Controller(QtWidgets.QDialog):
             adapter.start()  
             device = adapter.connect(MAC, timeout=2.0)
             id_device,status,id_protocol,acc_sam,acc_sens,gyro,bme688,dis,tcp,udp,host,ssid,passw = db.getConfig()
+            self.ui.text_acc_sampling.setText(str(acc_sam))
+            self.ui.text_acc_sensibity.setText(str(acc_sens))
+            self.ui.text_gyro_sensibility.setText(str(gyro))
+            self.ui.textEdit_18.setText(str(bme688))
+            self.ui.text_disc_time.setText(str(dis))
+            self.ui.text_tcp_port.setText(str(tcp))
+            self.ui.text_udp_port.setText(str(udp))
+            self.ui.text_host_ip.setText(str(host))
+            self.ui.text_ssid.setText(str(ssid))
+            self.ui.text_pass.setText(str(passw))
+
+            #self.ui.selec_10.setCurrentIndex(self.status.index(status))
+            #self.ui.selec_11.setCurrentIndex(self.protocol.index(id_protocol))
 
 
             payload = create_byte_array([status,id_protocol,acc_sam,acc_sens,gyro,bme688,dis,tcp,udp,host,ssid,passw])
             print(f"Writing config")
-            device.char_write(CHARACTERISTIC_UUID_CONFIG, payload, wait_for_response=False)
+            device.char_write(CHARACTERISTIC_UUID_CONFIG, payload, wait_for_response=True)
 
 
 
